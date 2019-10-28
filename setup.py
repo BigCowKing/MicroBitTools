@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="MicroBitTools",
-    version="0.0.1",
+    version="0.0.2",
     description="Library used for helping developing for the BBC microbit easier.",
     py_modules=["MicroBitTools"],
     package_dir={"": "src"},
@@ -15,5 +15,8 @@ setup(
         "Operating System :: Microsoft Windows 10",
     ],
     long_description=long_description,
-    long_description_content_type="text/markdown"
+    long_description_content_type="text/markdown",
+    url="https://github.com/BigCowKing/MicroBitTools",
+    author="Simon Lindgren",
+    author_email="babbilant@outlook.com",
 )

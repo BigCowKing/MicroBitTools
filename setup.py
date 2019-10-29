@@ -5,14 +5,14 @@ with open("README.md", "r") as fh:
 
 setup(
     name="MicroBitTools",
-    version="0.0.2",
+    version="1.0.0",
     description="Library used for helping developing for the BBC microbit easier.",
     py_modules=["MicroBitTools"],
     package_dir={"": "src"},
     classifiers=[
         "Programming Language :: Python :: 3.7",
-        "License :: OSI Approved :: GNU Affero General Public License v3.0",
-        "Operating System :: Microsoft Windows 10",
+        "License :: OSI Approved :: GNU Affero General Public License v3",
+        "Operating System :: Microsoft :: Windows :: Windows 10",
     ],
     long_description=long_description,
     long_description_content_type="text/markdown",

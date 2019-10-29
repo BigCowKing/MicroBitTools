@@ -1,6 +1,9 @@
 import shutil
 import os
 import serial
+import requests
+
+readymicrobithexurl="https://download2268.mediafire.com/h0s925j6zbeg/d9hg2oihzf8ur8i/microbitserialsystem+%282%29.hex"
 
 
 class InternalTools:
@@ -16,9 +19,10 @@ class InternalTools:
 
 def export(pythonfile, dirtomoveto):
     pyfilenoext = pythonfile[:-3]
-    os.system("py2hex " + pythonfile)
+    os.system("cd "+os.getcwd())
+    os.system('py2hex "' + pythonfile + '"')
     print("Moving to microbit.")
-    shutil.move(os.getcwd() + "\\" + pyfilenoext + ".hex", dirtomoveto)
+    shutil.move(pyfilenoext+".hex", dirtomoveto)
     print("Done!")
 
 
@@ -31,10 +35,33 @@ class SerialSystem:
 
     microbitpath = "F:\\"
 
-    def ReadyMicrobit(self):
-        shutil.copyfile(os.getcwd() + "\\src\\" + "microbitserialsystem.hex", self.microbitpath+"SerialSystem.hex")
-        shutil.copy
-        print("Done!")
+    #FIXA
+    def ReadyMicrobit(self, printb=False):
+        #shutil.copyfile(os.getcwd() + "\\src\\" + "microbitserialsystem.hex", self.microbitpath+"SerialSystem.hex")
+        #shutil.copy
+        if printb:
+            print("Downloading HEX")
+        url = readymicrobithexurl
+        r = requests.get(url)
+        if printb:
+            print("Downloaded HEX")
+            print("Fixing HEX")
+        content = ""
+        contentb = r.content
+        contentb = str(contentb)
+        contentb = contentb[:-1]
+        contentb = contentb[2:]
+        contentsplit = contentb.split("\\n")
+        for i in contentsplit:
+            content = content+i+"\n"
+        if printb:
+            print("Fixed HEX\n"+str(r.content))
+            print("Moving HEX to microbit")
+
+        outF = open(self.microbitpath+"SerialSystem.hex", "w")
+        outF.write(content)
+        if printb:
+            print("Moved HEX to microbit")
 
     def read(self):
 

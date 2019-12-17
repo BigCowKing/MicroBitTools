@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="MicroBitTools",
-    version="2.0.1",
+    version="2.1.1",
     description="Library used for helping developing for the BBC microbit easier.",
     py_modules=["MicroBitTools"],
     package_dir={"": "src"},

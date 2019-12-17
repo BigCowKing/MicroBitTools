@@ -7,9 +7,6 @@ import microfs
 import time
 import json
 
-readymicrobithexurl = "https://cdn.discordapp.com/attachments/249832375272472576/648205212280160256" \
-                      "/microbitserialsystem.hex "
-
 readymicrobithexurl = "https://www.dropbox.com/s/ksk3p5cnr5znky6/SerialSystem.hex?dl=1"
 
 
@@ -34,15 +31,14 @@ class InternalTools:
 
 
 def flash(pythonfile):
-    drive = InternalTools.get_mb()
+    drive = uflash.find_microbit()
     tryn = 0
     while drive == "":
         if tryn == 1:
             print("Please plug in a microbit")
         tryn = tryn + 1
         input()
-        drive = InternalTools.get_mb()
-
+        drive = uflash.find_microbit()
     pyfilenoext = pythonfile[:-3]
     os.system("cd " + os.getcwd())
     os.system('py2hex "' + pythonfile + '"')
@@ -52,9 +48,6 @@ def flash(pythonfile):
 
 
 def flashF(folder):
-    import microfs, uflash, os, time
-    # SerialSystem.ser.close()
-
     print("MicroBit is at: " + microfs.find_microbit()[0] + "\nMicroBit directory is at: " + uflash.find_microbit())
     try:
         mfiles = microfs.ls()
@@ -91,11 +84,13 @@ def export(arg1):
 
 
 class SerialSystem:
-    ser = serial.Serial()
+    ser = microfs.get_serial()
     ser.baudrate = 115200
-    ser.port = "COM3"
+    ser.close()
 
     microbitpath = uflash.find_microbit()
+    before = {'Buttons': {'A': False, 'B': False}, 'Temp': 20, 'CompassHeading': 369,
+                      'Accelerometer': {'Y': 0, 'X': 0, 'Z': 0}, 'Brightness': 0}
 
     def close(self):
         self.ser.close()
@@ -180,8 +175,11 @@ class SerialSystem:
         except serial.serialutil.SerialException as e:
             pass # print(str(e))
         data_raw = self.ser.readline()
-        if data_raw != b'':
-            return (data_raw.decode("utf-8"))
+        try:
+            if data_raw != b'':
+                return (data_raw.decode("utf-8"))
+        except UnicodeEncodeError as e:
+            print("Skipping because of error: " + str(e))
 
     def read(self):
         try:
@@ -217,9 +215,9 @@ class SerialSystem:
                 print(e)
                 result = {"Error": "Cant convert Json (MicroBit probably is using wrong firmware)"}
         else:
-            result = {'Buttons': {'A': False, 'B': False}, 'Temp': 20, 'CompassHeading': 369,
-                      'Accelerometer': {'Y': 0, 'X': 0, 'Z': 0}, 'Brightness': 0}
+            result = self.before
 
+        self.before = result
         return result
 
 
